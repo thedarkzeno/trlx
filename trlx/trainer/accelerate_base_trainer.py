@@ -69,9 +69,9 @@ class AccelerateRLTrainer(BaseRLTrainer):
             num_gpus = "1gpu"
         else:
             num_gpus = f"{self.accelerator.num_processes}gpus"
-        branch = get_git_tag()[0]
+        # branch = get_git_tag()[0]
 
-        run_name = "/".join([script_name, model_name, num_gpus]) + f":{branch}"
+        # run_name = "/".join([script_name, model_name, num_gpus]) + f":{branch}"
 
         if self.accelerator.is_main_process and not ray.is_initialized():
             config_dict = self.config.to_dict()
@@ -80,10 +80,10 @@ class AccelerateRLTrainer(BaseRLTrainer):
             init_trackers_kwargs = {}
             if "wandb" in config.train.trackers:
                 init_trackers_kwargs["wandb"] = {
-                    "name": run_name,
+                    "name": "trlx",
                     "entity": self.config.train.entity_name,
                     "group": self.config.train.group_name,
-                    "tags": ["/".join(get_git_tag())],
+                    # "tags": ["/".join(get_git_tag())],
                     "mode": "disabled" if os.environ.get("debug", False) else "online",
                 }
             self.accelerator.init_trackers(
