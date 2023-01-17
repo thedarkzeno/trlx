@@ -6,7 +6,7 @@ from functools import reduce
 from itertools import chain
 from typing import Any, Dict, Union
 
-import deepspeed  # type: ignore
+# import deepspeed  # type: ignore
 import numpy as np
 import torch
 import torch.nn.functional as F
