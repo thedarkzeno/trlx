@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Any, Dict, Optional, Set, Tuple
+from typing import Any, Dict, Optional, Set, Tuple, List
 
 import yaml
 
@@ -205,7 +205,30 @@ class TrainConfig:
     def from_dict(cls, config: Dict[str, Any]):
         return cls(**config)
 
+    
+@dataclass
+class DataConfig:
 
+    train_file: str
+    val_file: str
+
+    @classmethod
+    def from_dict(cls, config: Dict[str, Any]):
+        return cls(**config)  
+    
+@dataclass
+class Reward_modelConfig:
+
+    freeze_encoder: bool
+    dropout: float
+    model_fcs: List[int]
+        
+
+    @classmethod
+    def from_dict(cls, config: Dict[str, Any]):
+        return cls(**config)      
+
+    
 @dataclass
 class TRLConfig:
     """
@@ -214,6 +237,8 @@ class TRLConfig:
 
     method: MethodConfig
     model: ModelConfig
+    data: DataConfig
+    reward_model: Reward_modelConfig
     tokenizer: TokenizerConfig
     optimizer: OptimizerConfig
     scheduler: SchedulerConfig
@@ -238,6 +263,8 @@ class TRLConfig:
         data = {
             "method": self.method.__dict__,
             "model": self.model.__dict__,
+            "data": self.data.__dict__,
+            "reward_model": self.reward_model.__dict__,
             "optimizer": self.optimizer.__dict__,
             "scheduler": self.scheduler.__dict__,
             "train": self.train.__dict__,
@@ -253,6 +280,8 @@ class TRLConfig:
         return cls(
             method=get_method(config["method"]["name"]).from_dict(config["method"]),
             model=ModelConfig.from_dict(config["model"]),
+            data=DataConfig.from_dict(config["data"]),
+            reward_model=Reward_modelConfig.from_dict(config["reward_model"]),
             tokenizer=TokenizerConfig.from_dict(config["tokenizer"]),
             optimizer=OptimizerConfig.from_dict(config["optimizer"]),
             scheduler=SchedulerConfig.from_dict(config["scheduler"]),
